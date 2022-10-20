@@ -67,6 +67,8 @@ class PASE(LightningModule):
         if pretrained_backend_weights_path is not None:
             self.model = self._load_weigths(self.model, pretrained_backend_weights_path)
 
+        self.setup()
+
     def _load_weigths(self, model, path):
         checkpoint = torch.load(path)
         state_dict = {
@@ -79,8 +81,8 @@ class PASE(LightningModule):
         return model
 
     def setup(self, stage: Optional[str] = None):
-        if stage in [TrainerFn.FITTING, TrainerFn.VALIDATING, TrainerFn.TUNING]:
-            self.setup_workers()
+        # if stage in [TrainerFn.FITTING, TrainerFn.VALIDATING, TrainerFn.TUNING]:
+        self.setup_workers()
 
     def setup_workers(self):
         worker_configs = read_json_config(self.workers_config_path)

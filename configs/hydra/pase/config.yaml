@@ -32,7 +32,7 @@ trainer:
     transforms:
       - class_path: pase_eeg.data.transforms.ToTensor
         init_args:
-          device: "cpu"
+          device: "cuda:0"
       # - class_path: pase_eeg.data.transforms.ZNorm
       #   init_args:
       #     stats: "./notebooks/bci_comp_iv2a_stats.pkl"
