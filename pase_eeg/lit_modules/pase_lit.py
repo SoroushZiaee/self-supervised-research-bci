@@ -481,6 +481,7 @@ class PaseEEGBCIIV2aDataLit(LightningDataModule):
         batch_size: int = 32,
         workers_config: str = None,
         transforms=[],
+        model: str = "eegnetv2",
     ):
         super().__init__()
         self.data_path = data_path
