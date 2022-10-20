@@ -36,4 +36,5 @@ def run(config):
 if __name__ == "__main__":
     log.info("Start Running the Program..")
     sys.argv.append("hydra.job.chdir=True")
+    print(f"{os.getcwd()}")
     run()
