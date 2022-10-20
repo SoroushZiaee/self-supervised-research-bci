@@ -20,7 +20,7 @@ from .utils import (
 
 from ..nn.models.embedder import EEGEmb
 from ..nn.models.eegnet import EEGNetv2Emb
-from ..nn.modules.minions import minion_maker
+from ..nn.modules.minions import minion_maker, minion_maker2D
 from ..data.synthetic_dataset import EEGSyntheticDataset
 from ..data.chb_mit import CHBMITDataset
 from ..data.bci import BCI2aDataset
