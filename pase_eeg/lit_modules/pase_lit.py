@@ -38,6 +38,7 @@ class PASE(LightningModule):
         learning_rate: float = 3e-4,
         min_learning_rate: float = 1e-7,
         workers_config: str = None,
+        model: str = "eegnetv2",
         pretrained_backend_weights_path: str = None,
         logger: dict = {"proj": "my_project", "wb_group": "pase_eeg", "exp": "0"},
     ) -> None:
