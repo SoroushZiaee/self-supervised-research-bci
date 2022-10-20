@@ -23,7 +23,7 @@ def init():
 
 @hydra.main(
     version_base=None,
-    config_path="../../../configs/hydra/simple_classifier",
+    config_path="../../../configs/hydra/pase",
     config_name="config",
 )
 def run(config):
@@ -35,5 +35,5 @@ def run(config):
 
 if __name__ == "__main__":
     log.info("Start Running the Program..")
-    sys.argv.append('hydra.job.chdir=True')
+    sys.argv.append("hydra.job.chdir=True")
     run()
