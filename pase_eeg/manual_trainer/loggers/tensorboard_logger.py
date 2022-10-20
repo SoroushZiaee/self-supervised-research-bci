@@ -28,7 +28,7 @@ class TensorBoardManualLogger(object):
         if log_dirs != []:
             last_version = extract_num(log_dirs[0])
 
-            print(f"{last_version = }")
+            print(f"{last_version}")
 
             self.save_dir = os.path.join(
                 self.save_dir, "version_{:02d}/".format(last_version + 1)
