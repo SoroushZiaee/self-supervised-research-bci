@@ -140,8 +140,7 @@ class EEGNetv2Emb(nn.Module):
             x = F.dropout(x, self.dropout_rate)
 
         # FC Layer
-        print(f"shape : {x.shape}")
-        x = x.reshape((-1, 16 * 24 * 1))
+        x = x.reshape((-1, x.shape[1] * x.shape[2] * x.shape[3]))
         return x
 
     def forward(self, x, device=None):
