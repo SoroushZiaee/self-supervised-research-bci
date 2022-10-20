@@ -151,7 +151,7 @@ class BCI2aDataset(Dataset):
             meta_data=self.meta_data.iloc[indices],
             transforms=self.transforms,
             # Just for test
-            is_flatten=True,
+            is_flatten=False,
         )
 
     @staticmethod

@@ -319,7 +319,7 @@ class MLPMinion(Model):
 
         self.W = nn.ModuleDict()
         for key in self.channels.keys():
-            self.W[key] = nn.Linear(self.in_shape, self.out_shape)
+            self.W[key] = nn.Linear(self.in_shape, self.out_shape, device="cuda:0")
 
     def forward(self, x):
         if self.dropout_time > 0 and self.context > 1:
