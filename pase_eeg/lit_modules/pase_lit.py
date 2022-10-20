@@ -99,6 +99,7 @@ class PASE(LightningModule):
     def _step(
         self,
         batch: Tuple[Dict[str, Tensor], Dict[str, Union[Any, Dict[str, Tensor]]]],
+        step: int = None,
         name: str = "train",
     ):
         x, y = batch
@@ -107,6 +108,8 @@ class PASE(LightningModule):
             (1, 2, 3, 0),
         )
         embeddings = self(x)
+
+        results = {}
 
         # regression training step
         losses = {}
@@ -118,8 +121,10 @@ class PASE(LightningModule):
             )
             total_loss = total_loss + losses[key]
 
-            self.log(f"{name}_{key}_loss", losses[key], prog_bar=True)
-        self.log(f"total_loss", total_loss, prog_bar=True)
+            results[f"{name}_{key}_loss"] = losses[key]
+        results[f"total_loss"] = total_loss
+
+        self.log(results, step)
 
         return total_loss
 
@@ -127,16 +132,18 @@ class PASE(LightningModule):
         self,
         batch: Tuple[Dict[str, Tensor], Dict[str, Union[Any, Dict[str, Tensor]]]],
         batch_idx: int,
-        optimizer_idx: int,
+        num_epoch,
+        optimizer_idx: int = None,
     ):
-        return self._step(batch, name="train")
+        return self._step(batch, name="train", step=num_epoch)
 
     def validation_step(
         self,
         batch: Tuple[Dict[str, Tensor], Dict[str, Union[Any, Dict[str, Tensor]]]],
         batch_idx: int,
+        num_epoch,
     ):
-        return self._step(batch, name="val")
+        return self._step(batch, name="val", step=num_epoch)
 
     def configure_optimizers(self):
         params = list(self.parameters())
@@ -153,46 +160,14 @@ class PASE(LightningModule):
         )
 
         schedulers.append(
-            {
-                "scheduler": torch.optim.lr_scheduler.CosineAnnealingLR(
-                    optimizers[0], T_max=290, eta_min=1e-9
-                ),
-                # GradualWarmupScheduler(
-                #     optimizer,
-                #     80,
-                #     torch.optim.lr_scheduler.CosineAnnealingLR(
-                #         optimizer, T_max=220, eta_min=1e-9
-                #     ),
-                #     # torch.optim.lr_scheduler.ReduceLROnPlateau(
-                #     #     optimizer, min_lr=self.min_learning_rate
-                #     # ),
-                # ),
-                "interval": "epoch",
-                "frequency": 1,
-                "monitor": "total_loss",
-                "strict": True,
-            }
+            torch.optim.lr_scheduler.CosineAnnealingLR(
+                optimizers[0], T_max=290, eta_min=1e-9
+            )
         )
         schedulers.append(
-            {
-                "scheduler": torch.optim.lr_scheduler.CosineAnnealingLR(
-                    optimizers[1], T_max=300, eta_min=1e-9
-                ),
-                # GradualWarmupScheduler(
-                #     optimizer,
-                #     80,
-                #     torch.optim.lr_scheduler.CosineAnnealingLR(
-                #         optimizer, T_max=220, eta_min=1e-9
-                #     ),
-                #     # torch.optim.lr_scheduler.ReduceLROnPlateau(
-                #     #     optimizer, min_lr=self.min_learning_rate
-                #     # ),
-                # ),
-                "interval": "epoch",
-                "frequency": 1,
-                "monitor": "train_loss",
-                "strict": True,
-            }
+            torch.optim.lr_scheduler.CosineAnnealingLR(
+                optimizers[1], T_max=300, eta_min=1e-9
+            )
         )
         return optimizers, schedulers
 
@@ -221,7 +196,6 @@ class PaseEEGNetv2(LightningModule):
         self.min_learning_rate = min_learning_rate
         self.emb_dim = emb_dim
         self.workers_config_path = workers_config
-        self.setup_workers()
 
         if model == "eegnetv2":
             self.model = EEGNetv2Emb(emb_dim=emb_dim)

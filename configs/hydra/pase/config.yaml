@@ -3,7 +3,7 @@ trainer:
   max_epochs: 200
   device: "cuda:0"
   lit_model:
-    _target_: pase_eeg.lit_modules.pase_lit.PaseEEGNetv2
+    _target_: pase_eeg.lit_modules.pase_lit.PASE
     channels_config:
       _target_: hydra.utils.to_absolute_path
       path: configs/eeg_recording_standard/international_10_20_22.py
