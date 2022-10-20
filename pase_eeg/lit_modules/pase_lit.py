@@ -221,6 +221,7 @@ class PaseEEGNetv2(LightningModule):
         self.min_learning_rate = min_learning_rate
         self.emb_dim = emb_dim
         self.workers_config_path = workers_config
+        self.setup_workers()
 
         if model == "eegnetv2":
             self.model = EEGNetv2Emb(emb_dim=emb_dim)
