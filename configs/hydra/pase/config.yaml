@@ -12,7 +12,7 @@ trainer:
     min_learning_rate: 1e-7
     workers_config:
       _target_: hydra.utils.to_absolute_path
-      path: /content/self-supervised-research-bci/configs/hydra/pase/workers.json
+      path: ../self-supervised-research-bci/configs/hydra/pase/workers.json
     # decay_rate: 0.5
   lit_dataloader:
     _target_: pase_eeg.lit_modules.pase_lit.PaseEEGBCIIV2aDataLit
@@ -21,13 +21,13 @@ trainer:
       path: /content/data/
     channels_config:
       _target_: hydra.utils.to_absolute_path
-      path: /content/self-supervised-research-bci/configs/eeg_recording_standard/international_10_20_22.py
+      path: ../self-supervised-research-bci/eeg_recording_standard/international_10_20_22.py
     train_patients: [1, 2, 3, 4, 5, 6, 7, 8]
     test_patients: [9]
     batch_size: 32
     workers_config:
       _target_: hydra.utils.to_absolute_path
-      path: /content/self-supervised-research-bci/configs/hydra/pase/workers.json
+      path: ../self-supervised-research-bci/configs/hydra/pase/workers.json
     model: eegnetv2
     transforms:
       - class_path: pase_eeg.data.transforms.ToTensor
