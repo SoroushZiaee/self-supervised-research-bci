@@ -203,6 +203,148 @@ class PASE(LightningModule):
         print("\n")
 
 
+class PaseEEGNetv2(LightningModule):
+    def __init__(
+        self,
+        channels_config: str,
+        emb_dim: int,
+        learning_rate: float = 3e-4,
+        min_learning_rate: float = 1e-7,
+        workers_config: str = None,
+        model: str = "eegnetv2",
+        pretrained_backend_weights_path: str = None,
+        logger: dict = {"proj": "my_project", "wb_group": "pase_eeg", "exp": "0"},
+    ) -> None:
+
+        super().__init__()
+        self.learning_rate = learning_rate
+        self.min_learning_rate = min_learning_rate
+        self.emb_dim = emb_dim
+        self.workers_config_path = workers_config
+
+        if model == "eegnetv2":
+            self.model = EEGNetv2Emb(emb_dim=emb_dim)
+        elif model == "mbeegnetv2":
+            self.model = MBEEGNetv2Emb(emb_dim=emb_dim)
+
+        if pretrained_backend_weights_path is not None:
+            self.model = self._load_weigths(self.model, pretrained_backend_weights_path)
+
+    def _load_weigths(self, model, path):
+        checkpoint = torch.load(path)
+        state_dict = {
+            key.replace("model.", ""): value
+            for key, value in checkpoint["state_dict"].items()
+        }
+        model.load_state_dict(state_dict)
+
+        return model
+
+    def setup(self, stage: Optional[str] = None):
+        if stage in [TrainerFn.FITTING, TrainerFn.VALIDATING, TrainerFn.TUNING]:
+            self.setup_workers()
+
+    def setup_workers(self):
+        worker_configs = read_json_config(self.workers_config_path)
+        self.workers = nn.ModuleDict()
+        for conf in worker_configs:
+            conf["in_shape"] = self.emb_dim
+            conf["channels"] = self.eeg_electrode_positions
+            conf.pop("transform", None)
+            minion = minion_maker2D(conf)
+            self.workers[conf["name"]] = minion
+
+    def preprocess(self, x: Dict[str, Tensor]):
+        return torch.permute(
+            torch.vstack(list(map(lambda a: a.unsqueeze(0), x.values()))), (1, 2, 0)
+        ).unsqueeze(0)
+
+    def forward(self, x: Dict[str, Tensor]) -> Tensor:
+        embeddings = self.model(x, device=self.device)
+        return embeddings
+
+    def _step(
+        self,
+        batch: Tuple[Dict[str, Tensor], Dict[str, Union[Any, Dict[str, Tensor]]]],
+        step: int = None,
+        name: str = "train",
+    ):
+        x, y = batch
+        x = torch.permute(
+            torch.vstack(list(map(lambda a: a.unsqueeze(0), x.values()))),
+            (1, 2, 3, 0),
+        )
+        embeddings = self(x)
+
+        results = {}
+
+        # regression training step
+        losses = {}
+        total_loss = 0
+        for key in self.workers.keys():
+            logits = self.workers[key](embeddings)
+            losses[key] = self.workers[key].loss_weight * self.workers[key].loss(
+                logits, y[key]
+            )
+            total_loss = total_loss + losses[key]
+
+            results[f"{name}_{key}_loss"] = losses[key]
+        results[f"total_loss"] = total_loss
+
+        self.log(results, step)
+
+        return total_loss
+
+    def training_step(
+        self,
+        batch: Tuple[Dict[str, Tensor], Dict[str, Union[Any, Dict[str, Tensor]]]],
+        batch_idx: int,
+        num_epoch,
+        optimizer_idx: int = None,
+    ):
+        return self._step(batch, name="train", step=num_epoch)
+
+    def validation_step(
+        self,
+        batch: Tuple[Dict[str, Tensor], Dict[str, Union[Any, Dict[str, Tensor]]]],
+        batch_idx: int,
+        num_epoch,
+    ):
+        return self._step(batch, name="val", step=num_epoch)
+
+    def configure_optimizers(self):
+        params = list(self.parameters())
+        optimizers = []
+        schedulers = []
+
+        optimizers.append(
+            torch.optim.SGD([params[0], params[1]], lr=0.1, momentum=0.9, nesterov=True)
+        )
+        optimizers.append(
+            torch.optim.SGD(
+                params[2:], lr=self.learning_rate, momentum=0.9, nesterov=True
+            )
+        )
+
+        schedulers.append(
+            torch.optim.lr_scheduler.CosineAnnealingLR(
+                optimizers[0], T_max=290, eta_min=1e-9
+            )
+        )
+        schedulers.append(
+            torch.optim.lr_scheduler.CosineAnnealingLR(
+                optimizers[1], T_max=300, eta_min=1e-9
+            )
+        )
+        return optimizers, schedulers
+
+    def training_epoch_end(self, training_step_outputs):
+        print("\n")
+
+    def training_epoch_start(self, training_step_outputs):
+        print("\n")
+
+
 class PaseEEGSynthetichDataLit(LightningDataModule):
     def __init__(
         self,
