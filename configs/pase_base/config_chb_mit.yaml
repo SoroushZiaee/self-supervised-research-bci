@@ -1,0 +1,54 @@
+model:
+  class_path: pase_eeg.lit_modules.pase_lit.PASE
+  init_args:
+    channels_config: configs/eeg_recording_standard/international_10_20_23.py
+    emb_dim: 256
+    learning_rate: 3e-4
+    min_learning_rate: 1e-7
+    workers_config: configs/pase_base/workers.json
+data:
+  class_path: pase_eeg.lit_modules.pase_lit.PaseEEGCHBMITDataLit
+  init_args:
+    data_path: /data/chb_mit/
+    channels_config: configs/eeg_recording_standard/international_10_20_23.py
+    patient_list: [1, 3, 5, 6, 7, 8, 10, 23]
+    length: 1
+    batch_size: 32
+    workers_config: configs/pase_base/workers.json
+    transforms:
+      - class_path: pase_eeg.data.transforms.ToTensor
+        init_args:
+          device: "cpu"
+      - class_path: pase_eeg.data.transforms.ZNorm
+        init_args:
+          stats: "./notebooks/chb_stats.pkl"
+          mode: "mean-std"
+seed_everything: null
+trainer:
+  callbacks:
+    - class_path: pytorch_lightning.callbacks.LearningRateMonitor
+      init_args:
+        logging_interval: epoch
+    - class_path: pytorch_lightning.callbacks.ModelCheckpoint
+      init_args:
+        monitor: val_wte_loss
+        save_top_k: 3
+        mode: min
+    - class_path: checkpoint.code_snapshot.CodeSnapshot
+      init_args:
+        filetype:
+          - .py
+          - .yaml
+          - .json
+          - .csv
+    # Debugging Callbacks
+    # - class_path: verification.batch_norm.BatchNormVerificationCallback
+    # - class_path: verification.batch_gradient.BatchGradientVerificationCallback
+    # - class_path: pl_bolts.callbacks.TrainingDataMonitor
+    #   init_args:
+    #     log_every_n_steps: 1
+    # - class_path: pl_bolts.callbacks.ModuleDataMonitor
+    #   init_args:
+    #     log_every_n_steps: 1
+    #     submodules: true
+ckpt_path: null

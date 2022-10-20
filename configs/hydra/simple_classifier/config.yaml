@@ -1,0 +1,47 @@
+trainer:
+  _target_: pase_eeg.manual_trainer.trainer.Trainer
+  max_epochs: 2
+  device: "cuda:0"
+  lit_model:
+    _target_: pase_eeg.lit_modules.simple_classifier_lit.EEGClsLit
+    # model: "eegnetv1"
+    channels_config: 
+      _target_: hydra.utils.to_absolute_path
+      path: configs/eeg_recording_standard/international_10_20_22.py
+    emb_dim: 256
+    num_classes: 4
+    learning_rate: 5e-2
+    min_learning_rate: 1e-7
+    # decay_rate: 0.5
+    # pretrained_backend_weights_path: '/experiments/pase_eeg/lightning_logs/version_8/checkpoints/epoch=155-step=49763.ckpt'
+  lit_dataloader:
+    _target_: pase_eeg.lit_modules.simple_classifier_lit.EEGBCIIV2aDataLit
+    data_path:  
+      _target_: hydra.utils.to_absolute_path
+      path: /data/BCI_Competition_IV/
+    channels_config:  
+      _target_: hydra.utils.to_absolute_path
+      path: configs/eeg_recording_standard/international_10_20_22.py
+    train_patients: [
+        # 1,
+        # 2,
+        # 3,
+        # 4,
+        # 5,
+        # 6,
+        # 7,
+        # 8,
+      ]
+    test_patients: [9]
+    batch_size: 32
+    leave_one_out: false
+    transforms:
+      - class_path: pase_eeg.data.transforms.ToTensor
+        init_args:
+          device: "cpu"
+      #- class_path: pase_eeg.data.transforms.ZNorm
+      #init_args:
+      #stats: "./notebooks/bci_comp_iv2a_stats.pkl"
+      #mode: "mean-std"
+  callbacks:
+    - _target_: pase_eeg.manual_trainer.callbacks.checkpoint.ModelCheckpoint
