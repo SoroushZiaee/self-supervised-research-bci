@@ -459,7 +459,7 @@ class BlockEmb2d(nn.Module):
             x = block(x)
 
         x = self.conv_emb(x)
-        x = self.relu(x)
+        # x = self.relu(x)
         return x
 
 
