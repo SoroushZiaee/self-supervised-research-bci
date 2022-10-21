@@ -80,7 +80,7 @@ def run(
     dataset = prepare_dataset(data_path, eeg_electrode_positions, transforms)
     model = prepare_model(electrode_path, emb_dim, weight_path)
 
-    wav, label = dataset[:]
+    wav, label = dataset[:1728]
     wav = preprocess_data(wav)
 
     embeddings = model.forward(wav)
