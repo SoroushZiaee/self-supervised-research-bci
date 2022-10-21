@@ -112,12 +112,24 @@ class BCI2aDataset(Dataset):
 
         eeg_data = eeg_data.get_data()
 
+        # Need to be deleted
         label = meta_data["label"] - 1
+
+        label = {"label": label}
+
+        if self.is_csp:
+            label["csp"] = {
+                "Cz": np.load(
+                    os.path.join(
+                        self.data_path, "label" + "/" + meta_data["file_name"]
+                    )  # Change the train -> signal
+                )
+            }
 
         return eeg_data, label
 
     def load_csp(self, idx):
-        meta_data = self.meta_data.iloc[idx]
+        meta_data = self.meta_data.iloc[idx, :]
         csp_data = np.load(
             os.path.join(
                 self.data_path, "label" + "/" + meta_data["file_name"]
@@ -152,12 +164,6 @@ class BCI2aDataset(Dataset):
                 for i, key in enumerate(self.eeg_electrode_positions.keys())
             }
         )
-
-        label = {"label": label}
-
-        # Need to be deleted
-        if self.is_csp:
-            label["csp"] = {"Cz": self.load_csp(idx)}
 
         if self.transforms is not None:
             wav, label = self.transforms(wav, label)
