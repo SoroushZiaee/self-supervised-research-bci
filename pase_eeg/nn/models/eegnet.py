@@ -95,7 +95,7 @@ class EEGNetv2Emb(nn.Module):
         self.dropout_rate = dropout_rate
 
         # Layer 1
-        self.conv1 = nn.Conv2d(1, F1, (kernel_length, 1), padding="same", bias=False)
+        self.conv1 = nn.Conv2d(1, F1, (1, kernel_length), padding="same", bias=False)
         self.batchnorm1 = nn.BatchNorm2d(F1, False)
         self.dwconv2 = DepthwiseConv2d(
             in_channels=F1,

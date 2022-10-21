@@ -107,16 +107,16 @@ class PASE(LightningModule):
         name: str = "train",
     ):
         x, y = batch
+
+        # Change it from bci_data after tonight
+        x = torch.permute(
+            torch.vstack(list(map(lambda a: a.unsqueeze(0), x.values()))),
+            (1, 0, 3, 2),
+        )
+
         print(f"x keys : {x.keys()}")
         print(f"x keys : {x['Cz'].size()}")
 
-        # Change it from bci_data after tonight
-        x["Cz"] = torch.squeeze(x["Cz"])
-
-        x = torch.permute(
-            torch.vstack(list(map(lambda a: a.unsqueeze(0), x.values()))),
-            (1, 2, 3, 0),
-        )
         embeddings = self(x)
 
         results = {}
