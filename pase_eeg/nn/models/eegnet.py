@@ -145,8 +145,6 @@ class EEGNetv2Emb(nn.Module):
 
     def forward(self, x, device=None):
         x = self._forward_emb(x)
-        print(f"x shape : {x.size()}")
-
         x = self.fc1(x)
         return x
 
