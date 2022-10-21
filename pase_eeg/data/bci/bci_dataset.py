@@ -21,11 +21,13 @@ class BCI2aDataset(Dataset):
         meta_data=None,
         transforms=None,
         is_flatten: bool = False,
+        is_csp: bool = True,
     ):
         self.eeg_electrode_positions = eeg_electrode_positions
         self.data_path = data_path
         self._is_flatten = False
         self.num_channel = 22
+        self.is_csp = is_csp
 
         if meta_data is None:
             self.meta_data = pd.read_csv(os.path.join(self.data_path, "metadata.csv"))
@@ -90,7 +92,9 @@ class BCI2aDataset(Dataset):
 
         meta_data = self.meta_data.iloc[idx]
         eeg_data = np.load(
-            os.path.join(self.data_path, "train" + "/" + meta_data["file_name"])
+            os.path.join(
+                self.data_path, "signal" + "/" + meta_data["file_name"]
+            )  # Change the train -> signal
         )
 
         info = mne.create_info(
@@ -111,6 +115,16 @@ class BCI2aDataset(Dataset):
         label = meta_data["label"] - 1
 
         return eeg_data, label
+
+    def load_csp(self, idx):
+        meta_data = self.meta_data.iloc[idx]
+        csp_data = np.load(
+            os.path.join(
+                self.data_path, "label" + "/" + meta_data["file_name"]
+            )  # Change the train -> signal
+        )
+
+        return csp_data.reshape(-1)
 
     def __len__(self) -> int:
         return (
@@ -142,6 +156,10 @@ class BCI2aDataset(Dataset):
         if self.transforms is not None:
             wav, label = self.transforms(wav, label)
 
+        if self.is_csp:
+            label["csp"] = {}
+            label["csp"]["Cz"] = self.load_csp(idx)
+
         return wav, label
 
     def subset(self, indices):
@@ -152,6 +170,7 @@ class BCI2aDataset(Dataset):
             transforms=self.transforms,
             # Just for test
             is_flatten=True,
+            is_csp=True,
         )
 
     @staticmethod
