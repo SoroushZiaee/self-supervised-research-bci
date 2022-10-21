@@ -4,10 +4,13 @@ from pase_eeg.lit_modules.utils import eeg_electrode_configs
 from pase_eeg.data.bci.bci_dataset import BCI2aDataset
 from pase_eeg.data.transforms import Compose, ToTensor
 
+from typing import Any, Dict, List, Optional, Tuple, Union
 import argparse
 import os
 import pandas as pd
+
 import torch
+from torch import Tensor
 
 
 def parse_args():
@@ -26,6 +29,10 @@ def prepare_dataset(data_path: str, eeg_electrode_positions, transforms):
     dataset.make_flatten()
 
     return dataset
+
+
+def preprocess_data(x: Dict[str, Tensor]):
+    print(x["Cz"].size())
 
 
 def prepare_model(electrode_path, emb_dim: int, pretrained_backend_weights_path: str):
@@ -52,12 +59,9 @@ def run(data_path: str, electrode_path: str, weight_path: str, emb_dim: int):
     model = prepare_model(electrode_path, emb_dim, weight_path)
 
     wav, label = dataset[0]
+    preprocess_data(wav)
 
-    print(wav.keys())
-    print(wav["Cz"].size())
-    print(type(wav["Cz"]))
-
-    embeddings = model.forward(wav)
+    # embeddings = model.forward(wav)
 
 
 def main(conf):
