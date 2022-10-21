@@ -341,7 +341,8 @@ class MLPMinion(Model):
 
         logits = {}
         for key in self.W.keys():
-            logits[key] = self.W[key](h).squeeze()
+            # logits[key] = self.W[key](h).squeeze()
+            logits[key] = h.squeeze()
 
             if len(logits[key].size()) < 2:
                 logits[key] = logits[key].unsqueeze(1)
