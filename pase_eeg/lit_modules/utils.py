@@ -51,8 +51,10 @@ def transforms_from_worker_configs(worker_configs):
         elif name == "skewness":
             transforms.append(Skewness(**kwargs))
 
-    if len(transforms) > 0:
-        transforms.insert(0, LabelToDict())
+    # Becuse label is already dict
+
+    # if len(transforms) > 0:
+    #     transforms.insert(0, LabelToDict())
 
     return transforms
 
