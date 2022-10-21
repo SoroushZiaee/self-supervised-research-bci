@@ -33,6 +33,7 @@ def prepare_dataset(data_path: str, eeg_electrode_positions, transforms):
 
 def preprocess_data(x: Dict[str, Tensor]):
 
+    x["Cz"] = torch.squeeze(x["Cz"])
     x = torch.permute(
         torch.vstack(list(map(lambda a: a.unsqueeze(0), x.values()))),
         (1, 0, 3, 2),
