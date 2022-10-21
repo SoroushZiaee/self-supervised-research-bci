@@ -147,6 +147,7 @@ class EEGNetv2Emb(nn.Module):
     def forward(self, x, device=None):
         x = self._forward_emb(x)
         x = self.fc1(x)
+        x = F.elu(x)
         x = self.fc2(x)
         return x
 
