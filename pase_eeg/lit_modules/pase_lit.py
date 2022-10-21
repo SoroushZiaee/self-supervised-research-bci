@@ -111,7 +111,7 @@ class PASE(LightningModule):
         print(f"x keys : {x['Cz'].size()}")
 
         # Change it from bci_data after tonight
-        x = torch.squeeze(x)
+        x["Cz"] = torch.squeeze(x["Cz"])
 
         x = torch.permute(
             torch.vstack(list(map(lambda a: a.unsqueeze(0), x.values()))),
