@@ -30,7 +30,9 @@ def run(data_path: str, electrode_path: str):
 
     transforms = Compose([ToTensor(device="cuda:0")])
 
-    dataset = prepare_dataset(data_path, eeg_electrode_positions, transforms)
+    dataset = prepare_dataset(
+        data_path, eeg_electrode_positions, transforms
+    ).make_flatten()
 
     wav, label = dataset[0]
 
