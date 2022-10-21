@@ -74,7 +74,8 @@ class BCI2aDataset(Dataset):
             # for j in range(self.num_channel):
             #     self.flatten_channel.append(eeg_data[j])
             #     self.flatten_label.append(label)
-            print(f"eeg data shape : {eeg_data.shape}")
+            self.flatten_channel.append(eeg_data)
+            self.flatten_label.append(label)
 
         self.flatten_channel, self.flatten_label = self._shuffle(
             self.flatten_channel, self.flatten_label
