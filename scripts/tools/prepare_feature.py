@@ -14,7 +14,8 @@ def parse_args():
 
 
 def run(data_path: str):
-    meta_data = pd.read_csv(os.path.join())
+    meta_data = pd.read_csv(os.path.join(data_path, "metadata.csv"))
+    print(meta_data.head())
 
 
 def main(conf):
