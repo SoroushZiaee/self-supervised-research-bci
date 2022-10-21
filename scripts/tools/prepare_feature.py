@@ -67,7 +67,10 @@ def run(data_path: str, electrode_path: str, weight_path: str, emb_dim: int):
     wav, label = dataset[0]
     wav = preprocess_data(wav)
 
-    # embeddings = model.forward(wav)
+    embeddings = model.forward(wav)
+
+    print("Embedding is Done")
+    print(f"{embeddings.size()}")
 
 
 def main(conf):
