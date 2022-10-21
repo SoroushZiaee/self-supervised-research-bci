@@ -22,7 +22,7 @@ trainer:
     channels_config:
       _target_: hydra.utils.to_absolute_path
       path: configs/eeg_recording_standard/international_10_20_22.py
-    train_patients: [1, 2, 3, 4, 5, 6, 7, 8]
+    train_patients: [1, 2]
     test_patients: [9]
     batch_size: 4
     workers_config:
