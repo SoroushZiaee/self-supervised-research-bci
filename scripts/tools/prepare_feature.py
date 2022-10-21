@@ -81,7 +81,7 @@ def run(
     model = prepare_model(electrode_path, emb_dim, weight_path)
 
     wav, label = dataset[:]
-    wav = preprocess_data(wav)
+    wav = preprocess_data(wav[:, :, :100, :])
 
     embeddings = model.forward(wav)
 
