@@ -74,7 +74,7 @@ class PASE(LightningModule):
         state_dict = {
             key.replace("model.", ""): value
             for key, value in checkpoint["state_dict"].items()
-            if "model." in key
+            # if "model." in key  # Comment out for other model
         }
         model.load_state_dict(state_dict)
 
