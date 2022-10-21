@@ -52,7 +52,6 @@ def run(data_path: str, electrode_path: str, weight_path: str, emb_dim: int):
     model = prepare_model(electrode_path, emb_dim, weight_path)
 
     wav, label = dataset[0]
-    wav = 
     print(wav.keys())
     print(wav["Cz"].size)
     print(type(wav["Cz"]))
