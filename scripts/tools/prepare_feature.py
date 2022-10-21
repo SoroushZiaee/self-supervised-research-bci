@@ -8,6 +8,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 import argparse
 import os
 import pandas as pd
+import numpy as np
 
 import torch
 from torch import Tensor
@@ -20,6 +21,7 @@ def parse_args():
     parser.add_argument("--electrode_path", type=str)
     parser.add_argument("--weight_path", type=str)
     parser.add_argument("--emb_dim", type=int)
+    parser.add_argument("--output_path", type=str)
 
     return parser.parse_args()
 
@@ -56,7 +58,18 @@ def prepare_model(electrode_path, emb_dim: int, pretrained_backend_weights_path:
     return pase
 
 
-def run(data_path: str, electrode_path: str, weight_path: str, emb_dim: int):
+def save_features(x, y, output_path):
+    np.save(os.path.join(output_path, "X.npy"), x.cpu().detach().numpy())
+    np.save(os.path.join(output_path, "y.npy"), y.cpu().detach().numpy())
+
+
+def run(
+    data_path: str,
+    electrode_path: str,
+    weight_path: str,
+    emb_dim: int,
+    output_path: str,
+):
     (
         eeg_electrode_positions,
         eeg_electrods_plane_shape,
@@ -67,15 +80,15 @@ def run(data_path: str, electrode_path: str, weight_path: str, emb_dim: int):
     dataset = prepare_dataset(data_path, eeg_electrode_positions, transforms)
     model = prepare_model(electrode_path, emb_dim, weight_path)
 
-    wav, label = dataset[:2]
+    wav, label = dataset[:]
     wav = preprocess_data(wav)
-
-    print(wav.size())
 
     embeddings = model.forward(wav)
 
-    print("Embedding is Done")
-    print(f"{embeddings.size()}")
+    is_saved = save_features(embeddings, label["label"], output_path)
+
+    if is_saved:
+        print("Data is saved")
 
 
 def main(conf):
@@ -83,7 +96,8 @@ def main(conf):
     electrode_path = conf["electrode_path"]
     weight_path = conf["weight_path"]
     emb_dim = conf["emb_dim"]
-    run(data_path, electrode_path, weight_path, emb_dim)
+    output_path = conf["output_path"]
+    run(data_path, electrode_path, weight_path, emb_dim, output_path)
 
 
 if __name__ == "__main__":
