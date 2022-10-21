@@ -119,7 +119,7 @@ class EEGNetv2Emb(nn.Module):
         # dropout
 
         # FC Layer
-        self.fc1 = nn.Linear(16 * 32 * 1, emb_dim)
+        self.fc1 = nn.Linear((None, emb_dim))
 
     def _forward_emb(self, x, device=None):
         # Layer 1
@@ -146,6 +146,7 @@ class EEGNetv2Emb(nn.Module):
     def forward(self, x, device=None):
         x = self._forward_emb(x)
         print(f"x shape : {x.size()}")
+
         x = self.fc1(x)
         return x
 

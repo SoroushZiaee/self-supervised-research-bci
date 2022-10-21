@@ -32,7 +32,7 @@ class BCI2aDataset(Dataset):
         if meta_data is None:
             self.meta_data = pd.read_csv(
                 os.path.join(self.data_path, "metadata.csv")
-            ).iloc[:30]
+            ).iloc[:5]
         else:
             self.meta_data = meta_data
 
