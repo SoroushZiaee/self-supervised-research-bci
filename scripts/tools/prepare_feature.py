@@ -39,6 +39,8 @@ def preprocess_data(x: Dict[str, Tensor]):
         (1, 0, 3, 2),
     )
 
+    x.to("cuda:0")
+
     return x
 
 
