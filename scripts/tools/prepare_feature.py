@@ -60,7 +60,7 @@ def prepare_model(electrode_path, emb_dim: int, pretrained_backend_weights_path:
 
 def save_features(x, y, output_path):
     np.save(os.path.join(output_path, "X.npy"), x.cpu().detach().numpy())
-    np.save(os.path.join(output_path, "y.npy"), y.cpu().detach().numpy())
+    np.save(os.path.join(output_path, "y.npy"), y)
 
 
 def run(
@@ -86,11 +86,7 @@ def run(
     embeddings = model.forward(wav)
 
     labels = np.array([l["label"].item() for l in label])
-    print(labels)
-    # is_saved = save_features(embeddings, label["label"], output_path)
-
-    # if is_saved:
-    #     print("Data is saved")
+    save_features(embeddings, labels, output_path)
 
 
 def main(conf):
