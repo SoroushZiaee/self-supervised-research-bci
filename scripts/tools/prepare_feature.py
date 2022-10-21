@@ -39,7 +39,7 @@ def preprocess_data(x: Dict[str, Tensor]):
         (1, 0, 3, 2),
     )
 
-    return torch.squeeze(x)
+    return x
 
 
 def prepare_model(electrode_path, emb_dim: int, pretrained_backend_weights_path: str):
