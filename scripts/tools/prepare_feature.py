@@ -22,7 +22,7 @@ def parse_args():
 
 
 def prepare_dataset(data_path: str, eeg_electrode_positions, transforms):
-    dataset = BCI2aDataset(eeg_electrode_positions, data_path, transforms)
+    dataset = BCI2aDataset(eeg_electrode_positions, data_path, transforms=transforms)
     dataset.make_flatten()
 
     return dataset
