@@ -153,12 +153,11 @@ class BCI2aDataset(Dataset):
             }
         )
 
-        label["label"] = label
+        label = {"label": label}
 
         # Need to be deleted
         if self.is_csp:
-            label["csp"] = {}
-            label["csp"]["Cz"] = self.load_csp(idx)
+            label["csp"] = {"Cz": self.load_csp(idx)}
 
         if self.transforms is not None:
             wav, label = self.transforms(wav, label)
