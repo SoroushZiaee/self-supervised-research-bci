@@ -34,6 +34,8 @@ def prepare_model(electrode_path, emb_dim: int, pretrained_backend_weights_path:
         pretrained_backend_weights_path=pretrained_backend_weights_path,
     )
 
+    pase.to("cuda:0")
+
     return pase
 
 
@@ -48,12 +50,12 @@ def run(data_path: str, electrode_path: str, weight_path: str, emb_dim: int):
     dataset = prepare_dataset(data_path, eeg_electrode_positions, transforms)
     model = prepare_model(electrode_path, emb_dim, weight_path)
 
-    print("The model is Loaded......")
-
     wav, label = dataset[0]
-    embeddings = model.forward(wav)
+    print(wav.keys())
+    print(wav["Cz"].size())
+    print(type(wav["Cz"]))
 
-    print(embeddings)
+    embeddings = model.forward(wav)
 
 
 def main(conf):
