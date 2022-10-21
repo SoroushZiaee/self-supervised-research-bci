@@ -81,9 +81,9 @@ def run(
     model = prepare_model(electrode_path, emb_dim, weight_path)
 
     wav, label = dataset[:]
-    wav = preprocess_data(wav[:, :, :100, :])
+    wav = preprocess_data(wav)
 
-    embeddings = model.forward(wav)
+    embeddings = model.forward(wav[:, :, 0:100, :])
 
     labels = np.array([l["label"].item() for l in label])
 
