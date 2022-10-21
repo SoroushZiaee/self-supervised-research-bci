@@ -75,9 +75,9 @@ class BCI2aDataset(Dataset):
             self.flatten_channel.append(eeg_data)
             self.flatten_label.append(label)
 
-        self.flatten_channel, self.flatten_label = self._shuffle(
-            self.flatten_channel, self.flatten_label
-        )
+        # self.flatten_channel, self.flatten_label = self._shuffle(
+        #     self.flatten_channel, self.flatten_label
+        # )
         self._is_flatten = True
 
         self.eeg_electrode_positions = {
