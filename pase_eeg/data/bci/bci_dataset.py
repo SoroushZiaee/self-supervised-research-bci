@@ -128,15 +128,15 @@ class BCI2aDataset(Dataset):
 
         return eeg_data, label
 
-    def load_csp(self, idx):
-        meta_data = self.meta_data.iloc[idx, :]
-        csp_data = np.load(
-            os.path.join(
-                self.data_path, "label" + "/" + meta_data["file_name"]
-            )  # Change the train -> signal
-        )
+    # def load_csp(self, idx):
+    #     meta_data = self.meta_data.iloc[idx, :]
+    #     csp_data = np.load(
+    #         os.path.join(
+    #             self.data_path, "label" + "/" + meta_data["file_name"]
+    #         )  # Change the train -> signal
+    #     )
 
-        return csp_data.reshape(-1)
+    #     return csp_data.reshape(-1)
 
     def __len__(self) -> int:
         return (
@@ -167,10 +167,6 @@ class BCI2aDataset(Dataset):
 
         if self.transforms is not None:
             wav, label = self.transforms(wav, label)
-
-        if self.is_csp:
-            label["csp"] = {}
-            label["csp"]["Cz"] = self.load_csp(idx)
 
         return wav, label
 
