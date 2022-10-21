@@ -84,7 +84,7 @@ class EEGNetv2Emb(nn.Module):
         self,
         emb_dim=128,
         # Change from 22 -> 1
-        channels=1,
+        channels=22,
         dropout_rate=0.5,
         kernel_length=32,
         F1=8,
