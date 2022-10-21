@@ -350,7 +350,8 @@ class MLPMinion(Model):
 
     def loss(self, logits, targets):
         total_loss = 0
-        for key in logits.keys():
+        # for key in logits.keys():
+        for key in ["Cz"]:
             total_loss += self.criterion(logits[key], targets[key])
         return total_loss
 
