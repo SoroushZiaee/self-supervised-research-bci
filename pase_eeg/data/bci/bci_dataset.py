@@ -30,9 +30,7 @@ class BCI2aDataset(Dataset):
         self.is_csp = is_csp
 
         if meta_data is None:
-            self.meta_data = pd.read_csv(
-                os.path.join(self.data_path, "metadata.csv")
-            ).iloc[:100]
+            self.meta_data = pd.read_csv(os.path.join(self.data_path, "metadata.csv"))
         else:
             self.meta_data = meta_data
 
@@ -110,7 +108,7 @@ class BCI2aDataset(Dataset):
 
         eeg_data = (
             mne.io.RawArray(eeg_data, info, verbose=0)
-            .filter(l_freq=2, h_freq=None, verbose=0)
+            .filter(l_freq=3, h_freq=42, verbose=0)
             .resample(self.get_resampling_rate(), verbose=0)
         )
 

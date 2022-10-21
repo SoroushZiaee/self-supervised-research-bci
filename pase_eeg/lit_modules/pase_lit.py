@@ -116,8 +116,6 @@ class PASE(LightningModule):
             (1, 0, 3, 2),
         )
 
-        print(f"x keys : {x.size()}")
-
         embeddings = self(x)
 
         results = {}
