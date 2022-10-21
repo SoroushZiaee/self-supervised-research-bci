@@ -109,6 +109,8 @@ class PASE(LightningModule):
         x, y = batch
 
         # Change it from bci_data after tonight
+        x["Cz"] = torch.squeeze(x["Cz"])
+
         x = torch.permute(
             torch.vstack(list(map(lambda a: a.unsqueeze(0), x.values()))),
             (1, 0, 3, 2),
