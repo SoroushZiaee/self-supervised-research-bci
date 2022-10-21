@@ -39,7 +39,7 @@ def preprocess_data(x: Dict[str, Tensor]):
         (1, 0, 3, 2),
     )
 
-    x.to("cuda:0")
+    # x.to("cuda:0")
 
     return x
 
@@ -51,7 +51,7 @@ def prepare_model(electrode_path, emb_dim: int, pretrained_backend_weights_path:
         pretrained_backend_weights_path=pretrained_backend_weights_path,
     )
 
-    pase.to("cuda:0")
+    # pase.to("cuda:0")
 
     return pase
 
