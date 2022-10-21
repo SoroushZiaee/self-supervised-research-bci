@@ -1,7 +1,7 @@
 from pase_eeg.lit_modules.pase_lit import PASE
 
 
-def main(args):
+def main():
     print("Everything Works fine")
 
 
