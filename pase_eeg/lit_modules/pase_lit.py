@@ -107,6 +107,9 @@ class PASE(LightningModule):
         name: str = "train",
     ):
         x, y = batch
+        print(f"x keys : {x.keys()}")
+        print(f"x keys : {x['Cz'].size()}")
+
         x = torch.permute(
             torch.vstack(list(map(lambda a: a.unsqueeze(0), x.values()))),
             (1, 2, 3, 0),
