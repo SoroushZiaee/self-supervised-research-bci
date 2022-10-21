@@ -18,7 +18,7 @@ trainer:
     _target_: pase_eeg.lit_modules.pase_lit.PaseEEGBCIIV2aDataLit
     data_path:
       _target_: hydra.utils.to_absolute_path
-      path: /content/data/csp_data/
+      path: /content/data/chunk_data/
     channels_config:
       _target_: hydra.utils.to_absolute_path
       path: configs/eeg_recording_standard/international_10_20_22.py
