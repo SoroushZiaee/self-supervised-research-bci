@@ -1,4 +1,8 @@
 from pase_eeg.lit_modules.pase_lit import PASE
+from pase_eeg.lit_modules.utils import eeg_electrode_configs
+
+from pase_eeg.data.bci.bci_dataset import BCI2aDataset
+from pase_eeg.data.transforms import Compose, ToTensor
 
 import argparse
 import os
@@ -9,18 +13,34 @@ def parse_args():
     parser = argparse.ArgumentParser()
     # For specifying on WANDB
     parser.add_argument("--data_path", type=str)
+    parser.add_argument("--electrode_path", type=str)
 
     return parser.parse_args()
 
 
-def run(data_path: str):
-    meta_data = pd.read_csv(os.path.join(data_path, "metadata.csv"))
-    print(meta_data.head())
+def prepare_dataset(data_path: str, eeg_electrode_positions, transforms):
+    return BCI2aDataset(eeg_electrode_positions, data_path)
+
+
+def run(data_path: str, electrode_path: str):
+    (
+        eeg_electrode_positions,
+        eeg_electrods_plane_shape,
+    ) = eeg_electrode_configs(electrode_path)
+
+    transforms = Compose([ToTensor()])
+
+    dataset = prepare_dataset(data_path, eeg_electrode_positions, transforms)
+
+    wav, label = dataset[0]
+
+    print(wav.keys())
 
 
 def main(conf):
     data_path = conf["data_path"]
-    run(data_path)
+    electrode_path = conf["electrode_path"]
+    run(data_path, electrode_path)
 
 
 if __name__ == "__main__":
