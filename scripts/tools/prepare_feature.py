@@ -86,6 +86,10 @@ def run(
     embeddings = model.forward(wav)
 
     labels = np.array([l["label"].item() for l in label])
+
+    print(f"embedding shape : {embeddings.size()}")
+    print(f"embedding shape : {labels.shape}")
+
     save_features(embeddings, labels, output_path)
 
 
