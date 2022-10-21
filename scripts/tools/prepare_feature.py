@@ -52,11 +52,12 @@ def run(data_path: str, electrode_path: str, weight_path: str, emb_dim: int):
     model = prepare_model(electrode_path, emb_dim, weight_path)
 
     wav, label = dataset[0]
+
     print(wav.keys())
     print(wav["Cz"].size())
     print(type(wav["Cz"]))
 
-    embeddings = model.forward(wav.unsqueeze_(0))
+    embeddings = model.forward(wav)
 
 
 def main(conf):
