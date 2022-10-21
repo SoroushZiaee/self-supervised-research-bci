@@ -23,6 +23,8 @@ def minion_maker(cfg):
         minion = WTEMinion(**cfg)
     elif mtype in ["psd"]:
         minion = PSDMinion(**cfg)
+    elif mtype in ["csp"]:
+        minion = CSPMinion(**cfg)
     else:
         raise TypeError("Unrecognized minion type {}".format(mtype))
     return minion
@@ -382,6 +384,34 @@ class WTEMinion(MLPMinion):
 
 
 class PSDMinion(MLPMinion):
+    def __init__(
+        self,
+        in_shape,
+        out_shape,
+        dropout,
+        dropout_time=0.0,
+        hidden_size=256,
+        hidden_layers=2,
+        context=1,
+        loss_weight=1.0,
+        channels=None,
+        name="MLPMinion",
+    ):
+        super().__init__(
+            in_shape,
+            out_shape,
+            dropout,
+            dropout_time,
+            hidden_size,
+            hidden_layers,
+            context,
+            loss_weight,
+            channels,
+            name,
+        )
+
+
+class CSPMinion(MLPMinion):
     def __init__(
         self,
         in_shape,
