@@ -67,6 +67,7 @@ class PASE(LightningModule):
         if pretrained_backend_weights_path is not None:
             self.model = self._load_weigths(self.model, pretrained_backend_weights_path)
 
+        # We don't want pretrain
         else:
             self.setup()
 
