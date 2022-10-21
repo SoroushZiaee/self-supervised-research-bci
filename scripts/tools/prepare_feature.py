@@ -83,7 +83,7 @@ def run(
     wav, label = dataset[:]
     wav = preprocess_data(wav)
 
-    embeddings = model.forward(wav[:, :, 0:250, :])
+    embeddings = model.forward(wav[:, :, 0:500, :])
 
     labels = np.array([l["label"].item() for l in label])
 
