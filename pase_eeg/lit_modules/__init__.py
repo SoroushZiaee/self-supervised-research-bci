@@ -1,1 +1,1 @@
-from .pase_lit import *
+from .pase_lit import PASE
