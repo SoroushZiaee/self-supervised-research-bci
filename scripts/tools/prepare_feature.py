@@ -28,7 +28,7 @@ def run(data_path: str, electrode_path: str):
         eeg_electrods_plane_shape,
     ) = eeg_electrode_configs(electrode_path)
 
-    transforms = Compose([ToTensor()])
+    transforms = Compose([ToTensor(device="cuda:0")])
 
     dataset = prepare_dataset(data_path, eeg_electrode_positions, transforms)
 
