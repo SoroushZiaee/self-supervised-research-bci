@@ -85,6 +85,8 @@ def run(
 
     embeddings = model.forward(wav)
 
+    print(f"type : {type(label)}")
+    print(f"label : {label['label']}")
     is_saved = save_features(embeddings, label["label"], output_path)
 
     if is_saved:
