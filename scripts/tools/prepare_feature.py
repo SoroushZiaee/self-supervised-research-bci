@@ -32,7 +32,13 @@ def prepare_dataset(data_path: str, eeg_electrode_positions, transforms):
 
 
 def preprocess_data(x: Dict[str, Tensor]):
-    print(x["Cz"].size())
+
+    x = torch.permute(
+        torch.vstack(list(map(lambda a: a.unsqueeze(0), x.values()))),
+        (1, 0, 3, 2),
+    )
+
+    return torch.squeeze(x)
 
 
 def prepare_model(electrode_path, emb_dim: int, pretrained_backend_weights_path: str):
@@ -59,7 +65,7 @@ def run(data_path: str, electrode_path: str, weight_path: str, emb_dim: int):
     model = prepare_model(electrode_path, emb_dim, weight_path)
 
     wav, label = dataset[0]
-    preprocess_data(wav)
+    wav = preprocess_data(wav)
 
     # embeddings = model.forward(wav)
 
