@@ -85,7 +85,7 @@ def run(
 
     embeddings = model.forward(wav)
 
-    labels = np.array([l["label"].value for l in label])
+    labels = np.array([l["label"].item() for l in label])
     print(labels)
     # is_saved = save_features(embeddings, label["label"], output_path)
 
