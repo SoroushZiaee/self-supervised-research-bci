@@ -30,9 +30,7 @@ class BCI2aDataset(Dataset):
         self.is_csp = is_csp
 
         if meta_data is None:
-            self.meta_data = pd.read_csv(
-                os.path.join(self.data_path, "metadata.csv")
-            ).iloc[:64]
+            self.meta_data = pd.read_csv(os.path.join(self.data_path, "metadata.csv"))
         else:
             self.meta_data = meta_data
 
