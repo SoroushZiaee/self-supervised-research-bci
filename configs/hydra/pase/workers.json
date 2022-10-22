@@ -6,13 +6,5 @@
     "hidden_layers": 1,
     "type": "csp",
     "name": "csp"
-  },
-  {
-    "out_shape": 5,
-    "dropout": 0,
-    "hidden_size": 21,
-    "hidden_layers": 1,
-    "type": "wte",
-    "name": "wte"
   }
 ]
