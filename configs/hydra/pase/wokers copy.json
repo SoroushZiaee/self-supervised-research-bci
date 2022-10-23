@@ -39,21 +39,5 @@
     "hidden_layers": 1,
     "type": "kurtosis",
     "name": "kurtosis"
-  },
-  {
-    "out_shape": 1,
-    "dropout": 0,
-    "hidden_size": 21,
-    "hidden_layers": 1,
-    "type": "ptp-amp",
-    "name": "ptp-amp"
-  },
-  {
-    "out_shape": 1,
-    "dropout": 0,
-    "hidden_size": 21,
-    "hidden_layers": 1,
-    "type": "skewness",
-    "name": "skewness"
   }
 ]
