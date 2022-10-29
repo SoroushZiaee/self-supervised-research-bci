@@ -7,7 +7,7 @@ import re
 
 
 class TensorBoardManualLogger(object):
-    def __init__(self, save_dir: str = "/content/experiments/"):
+    def __init__(self, save_dir: str = "./experiments/"):
         # organize the folders
         self.save_dir = save_dir
         self._fix_prefolder()
