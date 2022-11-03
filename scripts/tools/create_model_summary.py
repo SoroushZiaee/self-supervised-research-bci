@@ -1,4 +1,5 @@
 from pase_eeg.lit_modules.pase_lit import PASE
+from torchsummary import summary
 
 
 def prepare_model(electrode_path, emb_dim: int, pretrained_backend_weights_path: str):
@@ -21,7 +22,7 @@ def main():
     )
 
     model = prepare_model(electrode_path, emb_dim, weight_path)
-    print("Hello")
+    print(model.model, (1, 22, 1001))
 
 
 if __name__ == "__main__":
