@@ -22,7 +22,7 @@ def main():
     )
 
     model = prepare_model(electrode_path, emb_dim, weight_path)
-    print(summary(model.model, (1, 22, 1004)), batch_dim=0)
+    print(summary(model.model, (1, 1025, 22)), batch_dim=0)
 
 
 if __name__ == "__main__":
