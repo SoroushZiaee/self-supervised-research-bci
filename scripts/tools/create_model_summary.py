@@ -16,7 +16,9 @@ def prepare_model(electrode_path, emb_dim: int, pretrained_backend_weights_path:
 def main():
     electrode_path = "/home/milad/self-supervised-research-bci/configs/eeg_recording_standard/international_10_20_22.py"
     emb_dim = 128
-    weight_path = None
+    weight_path = (
+        "/home/milad/self-supervised-research-bci/outputs/2022-10-30/10-51-04/199.ckpt"
+    )
 
     model = prepare_model(electrode_path, emb_dim, weight_path)
     print("Hello")
