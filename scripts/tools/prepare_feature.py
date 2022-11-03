@@ -40,6 +40,7 @@ def preprocess_data(x: Dict[str, Tensor]):
         torch.vstack(list(map(lambda a: a.unsqueeze(0), x.values()))),
         (1, 0, 3, 2),
     )
+    print(x.size())
 
     # x.to("cuda:0")
 
