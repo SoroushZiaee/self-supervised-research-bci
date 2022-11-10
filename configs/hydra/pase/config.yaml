@@ -18,11 +18,35 @@ trainer:
     _target_: pase_eeg.lit_modules.pase_lit.PaseEEGBCIIV2aDataLit
     data_path:
       _target_: hydra.utils.to_absolute_path
-      path: data/bci_csp_data/
+      path: data/chb_csp_data/
     channels_config:
       _target_: hydra.utils.to_absolute_path
-      path: configs/eeg_recording_standard/international_10_20_22.py
-    train_patients: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+      path: configs/eeg_recording_standard/international_10_20_23.py
+    train_patients:
+      [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+      ]
     test_patients: [1]
     batch_size: 32
     workers_config:
