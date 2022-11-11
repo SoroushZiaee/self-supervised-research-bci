@@ -1,0 +1,71 @@
+model:
+  class_path: pase_eeg.lit_modules.simple_classifier_lit.EEGClsLit
+  init_args:
+    channels_config: configs/eeg_recording_standard/international_10_20_22.py
+    emb_dim: 256
+    num_classes: 4
+    learning_rate: 3e-2
+    min_learning_rate: 1e-7
+    # pretrained_backend_weights_path: '/experiments/pase_eeg/lightning_logs/version_8/checkpoints/epoch=155-step=49763.ckpt'
+data:
+  class_path: pase_eeg.lit_modules.crossval_classifier_lit.EEGBCIIV2aDataLit_CV
+  init_args:
+    data_path: /data/BCI_Competition_IV/
+    channels_config: configs/eeg_recording_standard/international_10_20_22.py
+    patients_list:
+      [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+      ]
+    batch_size: 64
+    transforms:
+      - class_path: pase_eeg.data.transforms.ToTensor
+        init_args:
+          device: "cpu"
+      # - class_path: pase_eeg.data.transforms.ZNorm
+      #   init_args:
+      #     stats: "./notebooks/bci_comp_iv2a_stats.pkl"
+      #     mode: "mean-std"
+seed_everything: null
+trainer:
+  default_root_dir: /experiments/pase_eeg/testwb
+  log_every_n_steps: 1
+  callbacks:
+    - class_path: pytorch_lightning.callbacks.LearningRateMonitor
+      init_args:
+        logging_interval: epoch
+    - class_path: pytorch_lightning.callbacks.ModelCheckpoint
+      init_args:
+        monitor: train_loss
+        save_top_k: 3
+        mode: min
+    - class_path: checkpoint.code_snapshot.CodeSnapshot
+      init_args:
+        filetype:
+          - .py
+          - .yaml
+          - .json
+          - .csv
+  # logger:
+  #   - class_path: pytorch_lightning.loggers.WandbLogger
+  #     init_args:
+  #       project: "pase_eeg"
+  #       save_dir: /experiments/pase_eeg/testwb
+    # Debugging Callbacks
+    # - class_path: verification.batch_norm.BatchNormVerificationCallback
+    # - class_path: verification.batch_gradient.BatchGradientVerificationCallback
+    # - class_path: pl_bolts.callbacks.TrainingDataMonitor
+    #   init_args:
+    #     log_every_n_steps: 1
+    # - class_path: pl_bolts.callbacks.ModuleDataMonitor
+    #   init_args:
+    #     log_every_n_steps: 1
+    #     submodules: true
+  max_epochs: 300

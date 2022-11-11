@@ -1,0 +1,70 @@
+model:
+  class_path: pase_eeg.lit_modules.pase_lit.PASE
+  init_args:
+    channels_config: configs/eeg_recording_standard/international_10_20_22.py
+    emb_dim: 128
+    learning_rate: 3e-4
+    min_learning_rate: 1e-9
+    workers_config: configs/pase_base/workers.json
+data:
+  class_path: pase_eeg.lit_modules.pase_lit.PaseEEGBCIIV2aDataLit
+  init_args:
+    data_path: /data/BCI_Competition_IV/
+    channels_config: configs/eeg_recording_standard/international_10_20_22.py
+    train_patients:
+      [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+      ]
+    test_patients: [9]
+    batch_size: 32
+    workers_config: configs/pase_base/workers.json
+    transforms:
+      - class_path: pase_eeg.data.transforms.ToTensor
+        init_args:
+          device: "cpu"
+      # - class_path: pase_eeg.data.transforms.ZNorm
+      #   init_args:
+      #     stats: "./notebooks/bci_comp_iv2a_stats.pkl"
+      #     mode: "mean-std"
+seed_everything: null
+trainer:
+  default_root_dir: /experiments/pase_eeg/workers
+  callbacks:
+    - class_path: pytorch_lightning.callbacks.LearningRateMonitor
+      init_args:
+        logging_interval: epoch
+    - class_path: pytorch_lightning.callbacks.ModelCheckpoint
+      init_args:
+        monitor: total_loss
+        save_top_k: 3
+        mode: min
+    - class_path: checkpoint.code_snapshot.CodeSnapshot
+      init_args:
+        filetype:
+          - .py
+          - .yaml
+          - .json
+          - .csv
+    # Debugging Callbacks
+    # - class_path: monitor.sinc_layer_monitor.SincModuleMonitor
+    #   init_args:
+    #     log_every_n_steps: 100
+    # - class_path: verification.batch_norm.BatchNormVerificationCallback
+    # - class_path: verification.batch_gradient.BatchGradientVerificationCallback
+    # - class_path: pl_bolts.callbacks.TrainingDataMonitor
+    #   init_args:
+    #     log_every_n_steps: 1
+    # - class_path: pl_bolts.callbacks.ModuleDataMonitor
+    #   init_args:
+    #     log_every_n_steps: 1
+    #     submodules:
+    #       - "model.spacial_block"
+  log_every_n_steps: 1
+ckpt_path: null

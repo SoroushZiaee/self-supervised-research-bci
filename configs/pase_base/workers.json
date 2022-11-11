@@ -1,0 +1,59 @@
+[
+    {
+        "out_shape": 5,
+        "dropout": 0,
+        "hidden_size": 21,
+        "hidden_layers": 1,
+        "type": "wte",
+        "name": "wte"
+    },
+    {
+        "out_shape": 31,
+        "dropout": 0,
+        "hidden_size": 21,
+        "hidden_layers": 1,
+        "type": "wpte",
+        "name": "wpte"
+    },
+    {
+        "out_shape": 123,
+        "dropout": 0,
+        "hidden_size": 21,
+        "hidden_layers": 1,
+        "type": "psd",
+        "name": "psd",
+        "transform": {
+            "sfreq": 250,
+            "n_fft": 250,
+            "n_overlap": 125,
+            "n_per_seg": 250,
+            "unit": "bin",
+            "windowed": false,
+            "stats": "./notebooks/bci_comp_iv2a_psd_stats.pkl"
+        }
+    },
+    {
+        "out_shape": 1,
+        "dropout": 0,
+        "hidden_size": 21,
+        "hidden_layers": 1,
+        "type": "kurtosis",
+        "name": "kurtosis"
+    },
+    {
+        "out_shape": 1,
+        "dropout": 0,
+        "hidden_size": 21,
+        "hidden_layers": 1,
+        "type": "ptp-amp",
+        "name": "ptp-amp"
+    },
+    {
+        "out_shape": 1,
+        "dropout": 0,
+        "hidden_size": 21,
+        "hidden_layers": 1,
+        "type": "skewness",
+        "name": "skewness"
+    }
+]

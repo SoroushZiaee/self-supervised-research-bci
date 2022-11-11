@@ -1,0 +1,34 @@
+[
+  {
+    "out_shape": 8,
+    "dropout": 0,
+    "hidden_size": 100,
+    "hidden_layers": 1,
+    "type": "csp",
+    "name": "csp"
+  },
+  {
+    "out_shape": 5,
+    "dropout": 0,
+    "hidden_size": 21,
+    "hidden_layers": 1,
+    "type": "wte",
+    "name": "wte"
+  },
+  {
+    "out_shape": 31,
+    "dropout": 0,
+    "hidden_size": 21,
+    "hidden_layers": 1,
+    "type": "wpte",
+    "name": "wpte"
+  },
+  {
+    "out_shape": 1,
+    "dropout": 0,
+    "hidden_size": 21,
+    "hidden_layers": 1,
+    "type": "ptp-amp",
+    "name": "ptp-amp"
+  }
+]
